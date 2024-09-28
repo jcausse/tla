@@ -85,3 +85,11 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 	}
 	return program;
 }
+
+Expression * CreateFixtureSemanticAction(){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Expression * expression = calloc(1, sizeof(Expression));
+	expression->type = CREATEFIXTURE;
+	expression->factor = NULL;
+	return expression;
+}

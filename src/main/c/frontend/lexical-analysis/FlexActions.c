@@ -76,3 +76,9 @@ Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return UNKNOWN;
 }
+
+Token CreateFixtureLexemeAction(LexicalAnalyzerContext * LexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, LexicalAnalyzerContext);
+	LexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}

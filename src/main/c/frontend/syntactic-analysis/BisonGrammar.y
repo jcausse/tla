@@ -44,7 +44,7 @@
 %token <token> MUL
 %token <token> OPEN_PARENTHESIS
 %token <token> SUB
-
+%token <token> CREATE_FIXTURE
 %token <token> UNKNOWN
 
 /** Non-terminals. */
@@ -65,7 +65,7 @@
 
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
-program: expression													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }
+program: expression													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }												
 	;
 
 expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
@@ -73,11 +73,14 @@ expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressi
 	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
 	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
 	| factor														{ $$ = FactorExpressionSemanticAction($1); }
+	| CREATE_FIXTURE												{$$ = CreateFixtureSemanticAction();}
 	;
 
 factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
 	| constant														{ $$ = ConstantFactorSemanticAction($1); }
 	;
+
+
 
 constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
 	;

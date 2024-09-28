@@ -31,7 +31,8 @@ enum ExpressionType {
 	DIVISION,
 	FACTOR,
 	MULTIPLICATION,
-	SUBTRACTION
+	SUBTRACTION,
+	CREATEFIXTURE
 };
 
 enum FactorType {
