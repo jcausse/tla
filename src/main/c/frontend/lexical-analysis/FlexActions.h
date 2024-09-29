@@ -32,4 +32,6 @@ Token CreateFixtureLexemeAction(LexicalAnalyzerContext * LexicalAnalyzerContext,
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 #endif

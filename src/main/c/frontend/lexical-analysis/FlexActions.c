@@ -82,3 +82,9 @@ Token CreateFixtureLexemeAction(LexicalAnalyzerContext * LexicalAnalyzerContext,
 	LexicalAnalyzerContext->semanticValue->token = token;
 	return token;
 }
+
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
+	return STRING;
+}

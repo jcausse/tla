@@ -11,6 +11,7 @@
 	/** Terminals. */
 
 	int integer;
+	char * string;
 	Token token;
 
 	/** Non-terminals. */
@@ -19,6 +20,7 @@
 	Expression * expression;
 	Factor * factor;
 	Program * program;
+	Initializer * initializer;
 }
 
 /**
@@ -38,6 +40,7 @@
 
 /** Terminals. */
 %token <integer> INTEGER
+%token <string> STRING
 %token <token> ADD
 %token <token> CLOSE_PARENTHESIS
 %token <token> DIV
@@ -52,6 +55,7 @@
 %type <expression> expression
 %type <factor> factor
 %type <program> program
+
 
 /**
  * Precedence and associativity.
@@ -73,7 +77,9 @@ expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressi
 	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
 	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
 	| factor														{ $$ = FactorExpressionSemanticAction($1); }
-	| CREATE_FIXTURE												{$$ = CreateFixtureSemanticAction();}
+	//| CREATE_FIXTURE INTEGER 					/*DEPRECATED*/			        {$$ = CreateFixtureSemanticAction($2);}
+	| CREATE_FIXTURE INTEGER STRING 	{$$ = initializerSemanticAction($2, $3);}													
+
 	;
 
 factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }

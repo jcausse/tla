@@ -86,10 +86,29 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 	return program;
 }
 
-Expression * CreateFixtureSemanticAction(){
+Expression * CreateFixtureSemanticAction(const int value){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Expression * expression = calloc(1, sizeof(Expression));
 	expression->type = CREATEFIXTURE;
-	expression->factor = NULL;
+	Factor * factor = calloc(1, sizeof(Factor));
+	Constant * constant = calloc(1, sizeof(Constant));
+	factor->constant = constant;
+	constant->value = value;
+
+	expression->factor = factor;
 	return expression;
 }
+
+Expression * initializerSemanticAction(int numberTourn, char * nameTourn){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Initializer * initializer = calloc(1, sizeof(Initializer));
+	initializer->tourName = nameTourn;
+	initializer->tournamentAmount = numberTourn;
+
+	Expression * expression = calloc(1, sizeof(Expression));
+	expression->initializer = initializer;
+	return expression;
+}
+
+
+

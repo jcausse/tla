@@ -44,6 +44,9 @@
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+
+[[:alnum:]]+                        { return StringLexemeAction(createLexicalAnalyzerContext()); }
+
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
 
 %%

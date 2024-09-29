@@ -24,6 +24,7 @@ Expression * FactorExpressionSemanticAction(Factor * factor);
 Factor * ConstantFactorSemanticAction(Constant * constant);
 Factor * ExpressionFactorSemanticAction(Expression * expression);
 Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression);
-Expression * CreateFixtureSemanticAction();
+Expression * CreateFixtureSemanticAction(const int value);
+Expression * initializerSemanticAction(int numberTourn, char * nameTourn);
 
 #endif

@@ -21,6 +21,7 @@ typedef struct Constant Constant;
 typedef struct Expression Expression;
 typedef struct Factor Factor;
 typedef struct Program Program;
+typedef struct Initializer Initializer;
 
 /**
  * Node types for the Abstract Syntax Tree (AST).
@@ -32,12 +33,18 @@ enum ExpressionType {
 	FACTOR,
 	MULTIPLICATION,
 	SUBTRACTION,
-	CREATEFIXTURE
+	CREATEFIXTURE,
+	INITIALIZER
 };
 
 enum FactorType {
 	CONSTANT,
 	EXPRESSION
+};
+
+struct Initializer{
+	 int tournamentAmount;
+	 char * tourName;
 };
 
 struct Constant {
@@ -59,12 +66,13 @@ struct Expression {
 			Expression * leftExpression;
 			Expression * rightExpression;
 		};
+		Initializer * initializer;
 	};
 	ExpressionType type;
 };
 
 struct Program {
-	Expression * expression;
+		Expression * expression;
 };
 
 /**
