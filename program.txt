@@ -1,1 +1,1 @@
-CREATE_FIXTURE 5 "Campeonato de Lanzamiento de Pares de Muletas a 500m"
+CREATE_FIXTURE 5 "Campeonato de Lanzamiento de Pares de Muletas a 500m" equipos.json

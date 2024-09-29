@@ -77,7 +77,6 @@ expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressi
 	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
 	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
 	| factor														{ $$ = FactorExpressionSemanticAction($1); }
-	//| CREATE_FIXTURE INTEGER 					/*DEPRECATED*/			        {$$ = CreateFixtureSemanticAction($2);}
 	| CREATE_FIXTURE INTEGER STRING 	{$$ = initializerSemanticAction($2, $3);}													
 
 	;
