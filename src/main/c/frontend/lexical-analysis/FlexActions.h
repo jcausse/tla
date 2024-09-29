@@ -34,4 +34,7 @@ Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
+void BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+
 #endif

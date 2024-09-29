@@ -15,6 +15,7 @@
  * @see https://westes.github.io/flex/manual/Start-Conditions.html
  */
 %x MULTILINE_COMMENT
+%x IN_STRING
 
 /**
  * Reusable patterns.
@@ -24,6 +25,11 @@
  */
 
 %%
+
+"\""                                {BEGIN(IN_STRING), BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
+<IN_STRING>"\""                     {EndStringLexemeAction(createLexicalAnalyzerContext()), BEGIN(INITIAL);}
+<IN_STRING>([[:space:]]*[[:alnum:]]+)* {return StringLexemeAction(createLexicalAnalyzerContext());}
+
 
 "/*"								{ BEGIN(MULTILINE_COMMENT); BeginMultilineCommentLexemeAction(createLexicalAnalyzerContext()); }
 <MULTILINE_COMMENT>"*/"				{ EndMultilineCommentLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL); }
