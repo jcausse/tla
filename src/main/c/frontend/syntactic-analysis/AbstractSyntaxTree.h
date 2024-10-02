@@ -22,6 +22,7 @@ typedef struct Expression Expression;
 typedef struct Factor Factor;
 typedef struct Program Program;
 typedef struct Initializer Initializer;
+typedef struct Sentence Sentence;
 
 /**
  * Node types for the Abstract Syntax Tree (AST).
@@ -59,6 +60,10 @@ struct Factor {
 	FactorType type;
 };
 
+struct Sentence{
+	Initializer * initializer;
+};
+
 struct Expression {
 	union {
 		Factor * factor;
@@ -72,7 +77,10 @@ struct Expression {
 };
 
 struct Program {
-		Expression * expression;
+		union{
+			Expression * expression;
+			Sentence * sentence;
+		};
 };
 
 /**

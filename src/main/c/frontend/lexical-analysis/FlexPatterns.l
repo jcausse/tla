@@ -14,7 +14,6 @@
  *
  * @see https://westes.github.io/flex/manual/Start-Conditions.html
  */
-%x MULTILINE_COMMENT
 %x IN_STRING
 
 /**
@@ -26,9 +25,9 @@
 
 %%
 
-"\""                                {BEGIN(IN_STRING), BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
-<IN_STRING>"\""                     {EndStringLexemeAction(createLexicalAnalyzerContext()), BEGIN(INITIAL);}
-<IN_STRING>([[:space:]][[:alnum:]])* {return StringLexemeAction(createLexicalAnalyzerContext());}
+"\""                                {BEGIN(IN_STRING); BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
+<IN_STRING>"\""                     {EndStringLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
+<IN_STRING>([[:alnum:]][[:space:]]*)* {BEGIN(INITIAL);return StringLexemeAction(createLexicalAnalyzerContext());}
 
 "CREATE_FIXTURE"                    { return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE); }
 

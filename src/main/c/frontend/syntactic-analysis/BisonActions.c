@@ -71,10 +71,10 @@ Factor * ExpressionFactorSemanticAction(Expression * expression) {
 	return factor;
 }
 
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression) {
+Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence * sentence) {
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Program * program = calloc(1, sizeof(Program));
-	program->expression = expression;
+	program->sentence = sentence;
 	compilerState->abstractSyntaxtTree = program;
 	if (0 < flexCurrentContext()) {
 		logError(_logger, "The final context is not the default (0): %d", flexCurrentContext());
@@ -87,15 +87,19 @@ Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Express
 }
 
 
-Expression * initializerSemanticAction(int numberTourn, char * nameTourn){
+Initializer * createInitializerSemanticAction(int tournamentAmount, char * tournamentName){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Initializer * initializer = calloc(1, sizeof(Initializer));
-	initializer->tourName = nameTourn;
-	initializer->tournamentAmount = numberTourn;
+	initializer->tourName = tournamentName;
+	initializer->tournamentAmount = tournamentAmount;
+	return initializer;
+}
 
-	Expression * expression = calloc(1, sizeof(Expression));
-	expression->initializer = initializer;
-	return expression;
+Sentence * createSentenceSemanticAction(Initializer * initializer){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
+	Sentence * sentence = calloc(1, sizeof(Sentence));
+	sentence->initializer = initializer;
+	return sentence;
 }
 
 

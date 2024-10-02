@@ -23,7 +23,7 @@ Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Exp
 Expression * FactorExpressionSemanticAction(Factor * factor);
 Factor * ConstantFactorSemanticAction(Constant * constant);
 Factor * ExpressionFactorSemanticAction(Expression * expression);
-Program * ExpressionProgramSemanticAction(CompilerState * compilerState, Expression * expression);
-Expression * initializerSemanticAction(int numberTourn, char * nameTourn);
-
+Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence * sentence);
+Initializer * createInitializerSemanticAction(int numberTourn, char * nameTourn);
+Sentence * createSentenceSemanticAction(Initializer * initializer);
 #endif

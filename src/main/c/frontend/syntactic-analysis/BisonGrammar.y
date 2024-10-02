@@ -21,6 +21,8 @@
 	Factor * factor;
 	Program * program;
 	Initializer * initializer;
+	Sentence * sentence;
+
 }
 
 /**
@@ -41,20 +43,13 @@
 /** Terminals. */
 %token <integer> INTEGER
 %token <string> STRING
-%token <token> ADD
-%token <token> CLOSE_PARENTHESIS
-%token <token> DIV
-%token <token> MUL
-%token <token> OPEN_PARENTHESIS
-%token <token> SUB
 %token <token> CREATE_FIXTURE
 %token <token> UNKNOWN
 
 /** Non-terminals. */
-%type <constant> constant
-%type <expression> expression
-%type <factor> factor
 %type <program> program
+%type <sentence> sentence
+%type <initializer> initializer
 
 
 /**
@@ -62,32 +57,21 @@
  *
  * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
  */
-%left ADD SUB
-%left MUL DIV
+//%left ADD SUB
+//%left MUL DIV
 
 %%
 
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
-program: expression													{ $$ = ExpressionProgramSemanticAction(currentCompilerState(), $1); }												
+program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1);}												
 	;
 
-expression: expression[left] ADD expression[right]					{ $$ = ArithmeticExpressionSemanticAction($left, $right, ADDITION); }
-	| expression[left] DIV expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, DIVISION); }
-	| expression[left] MUL expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, MULTIPLICATION); }
-	| expression[left] SUB expression[right]						{ $$ = ArithmeticExpressionSemanticAction($left, $right, SUBTRACTION); }
-	| factor														{ $$ = FactorExpressionSemanticAction($1); }
-	| CREATE_FIXTURE INTEGER STRING 	{$$ = initializerSemanticAction($2, $3);}													
+sentence: initializer	{$$ = createSentenceSemanticAction($1);}
+;
 
-	;
+initializer: CREATE_FIXTURE INTEGER STRING {$$ = createInitializerSemanticAction($2, $3);}
+;
 
-factor: OPEN_PARENTHESIS expression CLOSE_PARENTHESIS				{ $$ = ExpressionFactorSemanticAction($2); }
-	| constant														{ $$ = ConstantFactorSemanticAction($1); }
-	;
-
-
-
-constant: INTEGER													{ $$ = IntegerConstantSemanticAction($1); }
-	;
 
 %%
