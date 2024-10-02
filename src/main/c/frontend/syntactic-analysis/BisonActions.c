@@ -95,12 +95,18 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 	return initializer;
 }
 
-Sentence * createSentenceSemanticAction(Initializer * initializer){
+Sentence * createSentenceSemanticAction(Initializer * initializer, json * json){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Sentence * sentence = calloc(1, sizeof(Sentence));
 	sentence->initializer = initializer;
+	sentence->json = json;
 	return sentence;
 }
 
+json * createJSONSemanticAction(char * string){
+	json * newJson = calloc(1, sizeof(json));
+	newJson->json = string;
+	return newJson;
+}
 
 

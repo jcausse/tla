@@ -45,7 +45,7 @@ void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 }
 
-void BeginFileContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 }
 

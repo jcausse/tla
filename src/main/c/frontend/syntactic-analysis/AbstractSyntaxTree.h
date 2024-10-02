@@ -23,6 +23,8 @@ typedef struct Factor Factor;
 typedef struct Program Program;
 typedef struct Initializer Initializer;
 typedef struct Sentence Sentence;
+typedef struct json json;
+
 
 /**
  * Node types for the Abstract Syntax Tree (AST).
@@ -62,6 +64,7 @@ struct Factor {
 
 struct Sentence{
 	Initializer * initializer;
+	json * json;
 };
 
 struct Expression {
@@ -83,6 +86,10 @@ struct Program {
 		};
 };
 
+struct json{
+	char * json;
+};
+
 /**
  * Node recursive destructors.
  */
@@ -92,3 +99,4 @@ void releaseFactor(Factor * factor);
 void releaseProgram(Program * program);
 
 #endif
+;

@@ -22,6 +22,7 @@
 	Program * program;
 	Initializer * initializer;
 	Sentence * sentence;
+	json * json;
 
 }
 
@@ -50,6 +51,7 @@
 %type <program> program
 %type <sentence> sentence
 %type <initializer> initializer
+%type <json> json
 
 
 /**
@@ -67,10 +69,13 @@
 program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1);}												
 	;
 
-sentence: initializer	{$$ = createSentenceSemanticAction($1);}
+sentence: initializer json {$$ = createSentenceSemanticAction($1, $2);}
 ;
 
 initializer: CREATE_FIXTURE INTEGER STRING {$$ = createInitializerSemanticAction($2, $3);}
+;
+
+json: STRING {$$ = createJSONSemanticAction($1);}
 ;
 
 
