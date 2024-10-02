@@ -45,7 +45,7 @@ enum FactorType {
 
 struct Initializer{
 	 int tournamentAmount;
-	 char * tourName;
+	 char * tournamentName;
 };
 
 struct Constant {

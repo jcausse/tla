@@ -16,6 +16,7 @@
  */
 %x IN_STRING
 
+
 /**
  * Reusable patterns.
  *
@@ -25,9 +26,11 @@
 
 %%
 
-"\""                                {BEGIN(IN_STRING); BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
 <IN_STRING>"\""                     {EndStringLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
+"\""                                {BEGIN(IN_STRING); BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
 <IN_STRING>([[:alnum:]][[:space:]]*)* {BEGIN(INITIAL);return StringLexemeAction(createLexicalAnalyzerContext());}
+
+
 
 "CREATE_FIXTURE"                    { return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE); }
 

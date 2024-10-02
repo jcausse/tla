@@ -25,9 +25,7 @@ void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-Token ArithmeticOperatorLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token ParenthesisLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token CreateFixtureLexemeAction(LexicalAnalyzerContext * LexicalAnalyzerContext, Token token);
 
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
@@ -36,5 +34,6 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 void BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void BeginFileContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 #endif

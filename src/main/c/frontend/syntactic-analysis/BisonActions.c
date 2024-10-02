@@ -90,7 +90,7 @@ Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence 
 Initializer * createInitializerSemanticAction(int tournamentAmount, char * tournamentName){
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Initializer * initializer = calloc(1, sizeof(Initializer));
-	initializer->tourName = tournamentName;
+	initializer->tournamentName = tournamentName;
 	initializer->tournamentAmount = tournamentAmount;
 	return initializer;
 }
