@@ -24,6 +24,8 @@ typedef struct Program Program;
 typedef struct Initializer Initializer;
 typedef struct Sentence Sentence;
 typedef struct json json;
+typedef struct json_value json_value;
+typedef struct json_object json_object;
 
 
 /**
@@ -37,13 +39,31 @@ enum ExpressionType {
 	MULTIPLICATION,
 	SUBTRACTION,
 	CREATEFIXTURE,
-	INITIALIZER
+	INITIALIZER,
+	JSONVALUE,
+	JSONOBJECT
 };
 
 enum FactorType {
 	CONSTANT,
 	EXPRESSION
 };
+
+//////////JSON///////////////
+struct json_value {
+    enum { JSON_NULL, JSON_TRUE, JSON_FALSE, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_OBJECT } type;
+    union {
+        double number;
+        char *string;
+        struct json_value *array; // For simplicity, pointer to the first element
+        struct json_value *object; // Pointer to the first key-value pair
+    } value;
+};
+
+struct json_object{
+	struct json_members * json_members;
+};
+//////////JSON///////////////
 
 struct Initializer{
 	 int tournamentAmount;

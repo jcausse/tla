@@ -16,6 +16,8 @@
  */
 %x IN_STRING
 %x JSON
+%x JSON_OBJECT
+%x JSON_MEMBER
 
 /**
  * Reusable patterns.
@@ -31,6 +33,14 @@
 <IN_STRING>([[:alnum:]][[:space:]]*)* {return StringLexemeAction(createLexicalAnalyzerContext());}
 
 "JSON"                              {BEGIN(JSON); BeginJSONContextLexemeAction(createLexicalAnalyzerContext());}
+
+"{"                                 {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); }
+<JSON>"}"                           {BEGIN(INITIAL); EndJSONContextLexemeAction(createLexicalAnalyzerContext());}
+<JSON>"{"                           {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); }
+<JSON_OBJECT>"}"                    {EndJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); BEGIN(JSON);}
+
+<JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext());}
+<JSON_MEMBER>"}"                    {BEGIN(JSON_OBJECT); EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext());}
 
 <JSON>([[:alnum:]_]+[[:space:]]*)*.json {
     yyin = fopen(yytext, "r");
@@ -49,11 +59,13 @@
     }
 }
 
+
 "CREATE_FIXTURE"                    { return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE); }
 
 [[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
+
 
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
 

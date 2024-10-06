@@ -13,6 +13,7 @@
 	int integer;
 	char * string;
 	Token token;
+	json_value * json_value;
 
 	/** Non-terminals. */
 
@@ -23,6 +24,7 @@
 	Initializer * initializer;
 	Sentence * sentence;
 	json * json;
+    json_object * json_object;
 
 }
 
@@ -47,11 +49,14 @@
 %token <token> CREATE_FIXTURE
 %token <token> UNKNOWN
 
+
 /** Non-terminals. */
 %type <program> program
 %type <sentence> sentence
 %type <initializer> initializer
 %type <json> json
+%type <json_value> json_value
+%type <json_object> json_object
 
 
 /**
@@ -76,7 +81,44 @@ initializer: CREATE_FIXTURE INTEGER STRING {$$ = createInitializerSemanticAction
 ;
 
 json: STRING {$$ = createJSONSemanticAction($1);}
+| json_object
 ;
+
+json_value:
+    STRING                { 
+    ;
+    }
+    | INTEGER               { 
+       ;
+    }
+    | array                { ; }
+    | json_object               { ; }
+    ;
+
+array:
+    '[' ']'
+    | '[' values ']'
+    ;
+
+values:
+    json_value
+    | values ',' json_value
+    ;
+
+json_object:
+    '{' '}'
+    | '{' members '}'
+    ;
+
+members:
+    member
+    | members ',' member
+    ;
+
+member:
+    STRING ':' json_value
+    ;
+
 
 
 %%

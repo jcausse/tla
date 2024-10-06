@@ -49,11 +49,33 @@ void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContex
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 }
 
+void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+}
+
+void BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+}
+
+void EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+}
+
+void BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+}
+
+void EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+}
+
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	if (_logIgnoredLexemes) {
 		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	}
 }
+
+
 
 
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
@@ -79,3 +101,4 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
 	return STRING;
 }
+

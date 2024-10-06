@@ -35,5 +35,9 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-
+void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+void EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 #endif
