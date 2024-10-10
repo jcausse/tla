@@ -8,6 +8,7 @@
 #include "SyntacticAnalyzer.h"
 #include <stdlib.h>
 
+
 /** Initialize module's internal state. */
 void initializeBisonActionsModule();
 

@@ -14,7 +14,6 @@
 	char * string;
 	Token token;
 	json_value * json_value;
-
 	/** Non-terminals. */
 
 	Constant * constant;
@@ -48,7 +47,16 @@
 %token <string> STRING
 %token <token> CREATE_FIXTURE
 %token <token> UNKNOWN
-
+/* " */
+%token <token> DOUBLE_QUOTES
+/* { */
+%token <token> CURLY_BRACKET_OPEN
+/* } */
+%token <token> CURLY_BRACKET_CLOSE
+/* [ */
+%token <token> BRACKET_OPEN 
+/* ] */
+%token <token> BRACKET_CLOSE
 
 /** Non-terminals. */
 %type <program> program
@@ -72,12 +80,13 @@
 // IMPORTANT: To use λ in the following grammar, use the %empty symbol.
 
 program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1);}												
-	;
-
-sentence: initializer json {$$ = createSentenceSemanticAction($1, $2);}
 ;
 
-initializer: CREATE_FIXTURE INTEGER STRING {$$ = createInitializerSemanticAction($2, $3);}
+sentence: initializer CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE{$$ = createSentenceSemanticAction($1, $3);}
+;
+
+initializer: CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES 
+{$$ = createInitializerSemanticAction($2, $4);}
 ;
 
 json: STRING {$$ = createJSONSemanticAction($1);}

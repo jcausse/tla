@@ -32,12 +32,12 @@ Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
-void BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 #endif

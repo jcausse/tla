@@ -18,6 +18,7 @@
 %x JSON
 %x JSON_OBJECT
 %x JSON_MEMBER
+%x JSON_ARRAY
 
 /**
  * Reusable patterns.
@@ -28,19 +29,19 @@
 
 %%
 
-<IN_STRING>"\""                     {EndStringLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
-"\""                                {BEGIN(IN_STRING); BeginStringContextLexemeAction(createLexicalAnalyzerContext());}
-<IN_STRING>([[:alnum:]][[:space:]]*)* {return StringLexemeAction(createLexicalAnalyzerContext());}
+"\""                                {BEGIN(IN_STRING); return BeginStringContextLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);}
+<IN_STRING>[A-Za-z0-9]*             {return StringLexemeAction(createLexicalAnalyzerContext());}
+<IN_STRING>"\""                     {BEGIN(INITIAL); return EndStringLexemeAction(createLexicalAnalyzerContext(),DOUBLE_QUOTES);}
+
+"{"                                 {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 
 "JSON"                              {BEGIN(JSON); BeginJSONContextLexemeAction(createLexicalAnalyzerContext());}
+<JSON>"}"                           {EndJSONContextLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
+<JSON>"{"                           {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
+<JSON_OBJECT>"}"                    {EndJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); BEGIN(JSON);}
 
-"{"                                 {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); }
-<JSON>"}"                           {BEGIN(INITIAL); EndJSONContextLexemeAction(createLexicalAnalyzerContext());}
-<JSON>"{"                           {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); }
-<JSON_OBJECT>"}"                    {EndJSONObjectContextLexemeAction(createLexicalAnalyzerContext()); BEGIN(JSON);}
-
-<JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext());}
-<JSON_MEMBER>"}"                    {BEGIN(JSON_OBJECT); EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext());}
+<JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
+<JSON_MEMBER>"}"                    {EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); BEGIN(JSON_OBJECT);}
 
 <JSON>([[:alnum:]_]+[[:space:]]*)*.json {
     yyin = fopen(yytext, "r");

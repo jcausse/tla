@@ -37,12 +37,16 @@ static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyze
 /* PUBLIC FUNCTIONS */
 
 
-void BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return DOUBLE_QUOTES;
 }
 
-void EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return DOUBLE_QUOTES;
 }
 
 void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
@@ -53,20 +57,28 @@ void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext)
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 }
 
-void BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_OPEN;
 }
 
-void EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_CLOSE;
 }
 
-void BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_OPEN;
 }
 
-void EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_CLOSE;
 }
 
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {

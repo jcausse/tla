@@ -32,6 +32,7 @@ typedef struct json_object json_object;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
+// TODO: quitar los de la calculadora
 enum ExpressionType {
 	ADDITION,
 	DIVISION,
