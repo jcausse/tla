@@ -9,6 +9,9 @@
 /log/
 /node_modules/
 /obj/
+/.idea/
+/cmake-build-debug/
+/CMakeFiles/
 
 # Files.
 .DS_Store
