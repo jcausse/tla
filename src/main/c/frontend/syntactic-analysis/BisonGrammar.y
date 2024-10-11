@@ -90,12 +90,12 @@ program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1
 json_object: DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON DOUBLE_QUOTES STRING DOUBLE_QUOTES {$$ = createJSONObjectSemanticAction($2, $6);}
     ;
 
-json: json_object {$$ = createJSONSemanticAction($1);}
+json: CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE{$$ = createJSONSemanticAction($2);}
 ;
 
 
-sentence: initializer JSON CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE {
-    $$ = createSentenceSemanticAction($1, $4);
+sentence: initializer JSON  json  {
+    $$ = createSentenceSemanticAction($1, $3);
 }
 ;
 
