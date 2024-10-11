@@ -34,10 +34,12 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token JsonObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 #endif

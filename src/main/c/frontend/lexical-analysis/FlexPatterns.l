@@ -19,6 +19,7 @@
 %x JSON_OBJECT
 %x JSON_MEMBER
 %x JSON_ARRAY
+%x JSON_OBJECT_STRING
 
 /**
  * Reusable patterns.
@@ -35,11 +36,16 @@
 
 "{"                                 {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 
-"JSON"                              {BEGIN(JSON); BeginJSONContextLexemeAction(createLexicalAnalyzerContext());}
+"JSON"                              {BEGIN(JSON); return BeginJSONContextLexemeAction(createLexicalAnalyzerContext(), JSON);}
 <JSON>"}"                           {EndJSONContextLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
 <JSON>"{"                           {BEGIN(JSON_OBJECT); BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 <JSON_OBJECT>"}"                    {EndJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); BEGIN(JSON);}
 
+<JSON_OBJECT>"\""                   {BEGIN(JSON_OBJECT_STRING); return BeginStringContextLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);}
+<JSON_OBJECT>[A-Za-z0-9]*          {return StringLexemeAction(createLexicalAnalyzerContext());}
+<JSON_OBJECT_STRING>"\""            {BEGIN(JSON_OBJECT);return EndStringLexemeAction(createLexicalAnalyzerContext(),DOUBLE_QUOTES);}
+
+<JSON_OBJECT>":"                    {return ColonLexemeAction(createLexicalAnalyzerContext(), COLON);}
 <JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 <JSON_MEMBER>"}"                    {EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); BEGIN(JSON_OBJECT);}
 

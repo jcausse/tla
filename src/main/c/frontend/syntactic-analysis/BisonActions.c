@@ -92,6 +92,7 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 	Initializer * initializer = calloc(1, sizeof(Initializer));
 	initializer->tournamentName = tournamentName;
 	initializer->tournamentAmount = tournamentAmount;
+	printf("\nInitializer Ready\n");
 	return initializer;
 }
 
@@ -103,10 +104,17 @@ Sentence * createSentenceSemanticAction(Initializer * initializer, json * json){
 	return sentence;
 }
 
-json * createJSONSemanticAction(char * string){
+json * createJSONSemanticAction(json_object * json_object){
 	json * newJson = calloc(1, sizeof(json));
-	newJson->json = string;
+	newJson->json_object = json_object;
 	return newJson;
+}
+
+json_object * createJSONObjectSemanticAction(char * key, char * value){ //	DEBUG ONLY
+	json_object * new_json_object = calloc(1, sizeof(json_object));
+	new_json_object->key = key;
+	new_json_object->value = value;
+	return new_json_object;
 }
 
 

@@ -49,8 +49,10 @@ Token EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Tok
 	return DOUBLE_QUOTES;
 }
 
-void BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return JSON;
 }
 
 void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
@@ -81,6 +83,12 @@ Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 	return CURLY_BRACKET_CLOSE;
 }
 
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return COLON;
+}
+
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	if (_logIgnoredLexemes) {
 		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
@@ -109,8 +117,13 @@ Token CreateFixtureLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext,
 }
 
 Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
-	return STRING;
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
+	printf("Matched string: %s\n", lexicalAnalyzerContext->lexeme); // Debug output
+    return STRING;
 }
+
+
+
+
 

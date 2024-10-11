@@ -62,7 +62,9 @@ struct json_value {
 };
 
 struct json_object{
-	struct json_members * json_members;
+	char * key;
+	char * value;
+	;
 };
 //////////JSON///////////////
 
@@ -108,7 +110,7 @@ struct Program {
 };
 
 struct json{
-	char * json;
+	json_object * json_object;
 };
 
 /**

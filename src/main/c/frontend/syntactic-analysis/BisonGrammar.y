@@ -6,7 +6,6 @@
 
 // You touch this, and you die.
 %define api.value.union.name SemanticValue
-
 %union {
 	/** Terminals. */
 
@@ -26,6 +25,7 @@
     json_object * json_object;
 
 }
+
 
 /**
  * Destructors. This functions are executed after the parsing ends, so if the
@@ -57,6 +57,10 @@
 %token <token> BRACKET_OPEN 
 /* ] */
 %token <token> BRACKET_CLOSE
+/* JSON */
+%token <token> JSON
+/*:*/
+%token <token> COLON
 
 /** Non-terminals. */
 %type <program> program
@@ -82,17 +86,34 @@
 program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1);}												
 ;
 
-sentence: initializer CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE{$$ = createSentenceSemanticAction($1, $3);}
+//  "key":"value"
+json_object: DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON DOUBLE_QUOTES STRING DOUBLE_QUOTES {$$ = createJSONObjectSemanticAction($2, $6);}
+    ;
+
+json: json_object {$$ = createJSONSemanticAction($1);}
 ;
+
+
+sentence: initializer JSON CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE {
+    $$ = createSentenceSemanticAction($1, $4);
+}
+;
+
 
 initializer: CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES 
 {$$ = createInitializerSemanticAction($2, $4);}
 ;
 
-json: STRING {$$ = createJSONSemanticAction($1);}
-| json_object
-;
 
+
+members:
+    member
+    | members ',' member
+    ;
+
+member:
+    STRING ':' json_value
+    ;
 json_value:
     STRING                { 
     ;
@@ -112,20 +133,6 @@ array:
 values:
     json_value
     | values ',' json_value
-    ;
-
-json_object:
-    '{' '}'
-    | '{' members '}'
-    ;
-
-members:
-    member
-    | members ',' member
-    ;
-
-member:
-    STRING ':' json_value
     ;
 
 
