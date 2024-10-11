@@ -26,7 +26,7 @@ Factor * ConstantFactorSemanticAction(Constant * constant);
 Factor * ExpressionFactorSemanticAction(Expression * expression);
 Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence * sentence);
 Initializer * createInitializerSemanticAction(int numberTourn, char * nameTourn);
-Sentence * createSentenceSemanticAction(Initializer * initializer, json * json);
+Sentence * createSentenceSemanticAction(Initializer * initializer, json * json, char * sortby);
 json * createJSONSemanticAction(json_object * json_object);
 
 json_object * createJSONObjectSemanticAction(char * key, char * value); // DEBUG ONLY

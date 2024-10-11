@@ -123,6 +123,12 @@ Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
     return STRING;
 }
 
+Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return SORT_BY;
+}
+
 
 
 

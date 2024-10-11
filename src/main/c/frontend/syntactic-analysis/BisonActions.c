@@ -96,11 +96,15 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 	return initializer;
 }
 
-Sentence * createSentenceSemanticAction(Initializer * initializer, json * json){
+Sentence * createSentenceSemanticAction(Initializer * initializer, json * json,
+	char * sortby)
+	{
 	_logSyntacticAnalyzerAction(__FUNCTION__);
 	Sentence * sentence = calloc(1, sizeof(Sentence));
 	sentence->initializer = initializer;
 	sentence->json = json;
+	sentence->sort_by = sortby;
+	printf("\nSentence successful!\n");
 	return sentence;
 }
 

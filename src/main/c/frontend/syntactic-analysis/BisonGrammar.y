@@ -61,6 +61,8 @@
 %token <token> JSON
 /*:*/
 %token <token> COLON
+/*SORT_BY*/
+%token <token> SORT_BY
 
 /** Non-terminals. */
 %type <program> program
@@ -94,8 +96,8 @@ json: CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE{$$ = createJSONSemantic
 ;
 
 
-sentence: initializer JSON  json  {
-    $$ = createSentenceSemanticAction($1, $3);
+sentence: initializer JSON json SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES{
+    $$ = createSentenceSemanticAction($1, $3, $6);
 }
 ;
 

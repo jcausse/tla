@@ -88,6 +88,7 @@ struct Factor {
 struct Sentence{
 	Initializer * initializer;
 	json * json;
+	char * sort_by;
 };
 
 struct Expression {

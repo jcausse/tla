@@ -20,6 +20,7 @@
 %x JSON_MEMBER
 %x JSON_ARRAY
 %x JSON_OBJECT_STRING
+%x SORTBY
 
 /**
  * Reusable patterns.
@@ -52,6 +53,10 @@
 <JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); return BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 <JSON_MEMBER>"}"                    {BEGIN(JSON_OBJECT); return EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); }
 
+"SORT_BY"                           { return SortByLexemeAction(createLexicalAnalyzerContext(), SORT_BY);}
+
+
+
 <JSON>([[:alnum:]_]+[[:space:]]*)*.json {
     yyin = fopen(yytext, "r");
     if (!yyin) {
@@ -64,6 +69,7 @@
 
 <<EOF>> {
     yypop_buffer_state();
+    BEGIN(INITIAL);
     if (!YY_CURRENT_BUFFER) {
         yyterminate(); 
     }

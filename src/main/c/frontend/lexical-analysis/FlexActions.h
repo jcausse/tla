@@ -42,4 +42,5 @@ Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyze
 Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token JsonObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 #endif
