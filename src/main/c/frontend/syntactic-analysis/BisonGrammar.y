@@ -2,17 +2,15 @@
 #include "BisonActions.h"
 %}
 
-// You touch this, and you die.
 %define api.value.union.name SemanticValue
 %union {
 	/** Terminals. */
-
 	int integer;
 	char * string;
 	Token token;
 	json_value * json_value;
-	/** Non-terminals. */
-
+	
+    /** Non-terminals. */
 	Constant * constant;
 	Expression * expression;
 	Factor * factor;
@@ -21,11 +19,9 @@
 	Sentence * sentence;
 	json * json;
     json_object * json_object;
+    json_object * json_array; //TODO: CAMBIAR el tipo
     DateRange * date_range;
-
-
 }
-
 
 /**
  * Destructors. This functions are executed after the parsing ends, so if the
@@ -42,132 +38,147 @@
 %destructor { releaseProgram($$); } <program>
 */
 
-/** Terminals. */
-/*  GENERAL TOKENS*/
-%token <integer> INTEGER
-%token <string> STRING
-%token <token> UNKNOWN
+/***********************************************************************************************/
+/*** TOKENS ************************************************************************************/
+/***********************************************************************************************/
 
-/* CREATE_FIXTURE*/
-%token <token> CREATE_FIXTURE
-/* " */
-%token <token> DOUBLE_QUOTES
-/* { */
-%token <token> CURLY_BRACKET_OPEN
-/* } */
-%token <token> CURLY_BRACKET_CLOSE
-/* [ */
-%token <token> BRACKET_OPEN 
-/* ] */
-%token <token> BRACKET_CLOSE
-/* JSON */
-%token <token> JSON
-/*:*/
-%token <token> COLON
-/*SORT_BY*/
-%token <token> SORT_BY
-/*DATE TOKENS*/
-%token <token> START_DATE
-%token <token> END_DATE
-%token <string> DATE
+/***********************/
+/*** TERMINAL TOKENS ***/
+/***********************/
 
+/*** General Tokens ***/
+%token <integer> INTEGER                /* Integers */
+%token <string> STRING                  /* Strings */
+%token <token> UNKNOWN                  /* Other unknown tokens */
 
-/** Non-terminals. */
+/*** DSL Tokens ***/
+%token <token> CREATE_FIXTURE           /* CREATE_FIXTURE */
+%token <token> JSON                     /* JSON */
+%token <token> SORT_BY                  /* SORT_BY */
+
+/*** JSON Tokens ***/
+%token <token> CURLY_BRACKET_OPEN       /* { */
+%token <token> CURLY_BRACKET_CLOSE      /* } */
+%token <token> BRACKET_OPEN             /* [ */
+%token <token> BRACKET_CLOSE            /* ] */
+%token <token> DOUBLE_QUOTES            /* " */
+%token <token> COLON                    /* : */
+%token <token> COMMA                    /* , */
+
+/*** Date Tokens ***/
+%token <token> START_DATE               /* START_DATE */
+%token <token> END_DATE                 /* END_DATE */
+%token <string> DATE                    /* DATE */
+
+/***************************/
+/*** NON-TERMINAL TOKENS ***/
+/***************************/
+
+/*** DSL Tokens ***/
 %type <program> program
 %type <sentence> sentence
 %type <initializer> initializer
-%type <json> json
-%type <json_value> json_value
-%type <json_object> json_object
 %type <date_range> optional_date_range
 %type <string> optional_sort_by
 
+/*** JSON Tokens ***/
+%type <json> json
+%type <json_value> json_value
+%type <json_object> json_object
+%type <json_array> json_array
 
-/**
- * Precedence and associativity.
- *
- * @see https://www.gnu.org/software/bison/manual/html_node/Precedence.html
- */
-//%left ADD SUB
-//%left MUL DIV
 
 %%
 
-// IMPORTANT: To use λ in the following grammar, use the %empty symbol.
+/***********************************************************************************************/
+/*** PRODUCTION RULES **************************************************************************/
+/***********************************************************************************************/
+/*** IMPORTANT: To use λ in the following grammar, use the %empty symbol.                    ***/
 
-program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1);}												
+program: 
+    sentence                                        { $$ = SentenceProgramSemanticAction(currentCompilerState(), $1); }
 ;
 
-//  "key":"value"
-//  El STRING en el Value podríamos convertirlo en un json_value
-json_object: DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON DOUBLE_QUOTES STRING DOUBLE_QUOTES {$$ = createJSONObjectSemanticAction($2, $6);}
-    ;
-
-json: CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE{$$ = createJSONSemanticAction($2);}
+/**
+ * Production rule: sentence
+ * Any sentence starts with an initializer, followed by the "JSON" keyword, a valid json, and optional date_range and sort_by parameters.
+ */
+sentence: 
+    initializer JSON json optional_date_range optional_sort_by                  { $$ = createSentenceSemanticAction($1, $3, $4, $5); }
 ;
 
-
-sentence: initializer JSON json optional_date_range optional_sort_by
-{
-    $$ = createSentenceSemanticAction($1, $3, $4, $5);
-}
+/**
+ * Production rule: initializer
+ * An initializer is the CREATE_FIXTURE reserved word, an integer, and then a string (in between double quotes characters).
+ */
+initializer: 
+    CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES                   { $$ = createInitializerSemanticAction($2, $4); }
 ;
 
-
-
-initializer: CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES 
-{$$ = createInitializerSemanticAction($2, $4);}
+/**
+ * Production rule: json
+ * Models a JSON file, consisting in curly braces with at least one json_object inside.
+ */
+json: 
+    CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE                          { $$ = createJSONSemanticAction($2); }
 ;
 
-/* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
-optional_date_range: %empty {$$ = NULL;}
-    | START_DATE DATE END_DATE DATE
-    {
-        $$ = createDateRangeSemanticAction($2, $4);
-    }
+/**
+ * Production rule: json_object
+ * JSON Objects are key-value pairs separated by colons, where the KEY is always a string, and the value is any json_value.
+ */
+json_object:
+    DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON json_value                         { $$ = createJSONObjectSemanticAction($2, $5); }
 ;
-
-optional_sort_by: %empty {$$ = NULL;}
-    | SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES
-    {
-        $$ = $3;
-    }
-;
-
 
 members:
     member
-    | members ',' member
-    ;
+    | members COMMA member
+;
 
 member:
-    STRING ':' json_value
-    ;
+    STRING COLON json_value
+;
+
+/**
+ * Production rule: json_array
+ * Matches a JSON array (either opening and closing brackets (empty array), or values in between brackets).
+ */
+json_array: // TODO: fix type warning
+    BRACKET_OPEN BRACKET_CLOSE 
+    | BRACKET_OPEN json_array_values BRACKET_CLOSE 
+;
+
+/**
+ * Production rule: json_values
+ * Represents values inside a JSON array. One or more values using COMMA as separator.
+ */
+json_array_values: 
+    json_value 
+    | json_value COMMA json_array_values
+;
+
+/**
+ * Production rule: json_value
+ * JSON values can be strings (in between double quotes), integers, arrays, or other json_object types.
+ * TODO: add support for true, false, null and floating point numbers
+ */
 json_value:
-    STRING                { 
-    ;
-    }
-    | INTEGER               { 
-       ;
-    }
-    | array                { ; }
-    | json_object               { ; }
-    ;
+    DOUBLE_QUOTES STRING DOUBLE_QUOTES              { $$ = createJSONValueSemanticAction        (JSON_STRING,   $2); }
+    | INTEGER                                       { $$ = createJSONIntegerValueSemanticAction (JSON_NUMBER,   $1); }
+    | json_array                                    { $$ = createJSONValueSemanticAction        (JSON_ARRAY,    $1); }
+    | json_object                                   { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $1); }
+;
 
-array:
-    '[' ']'
-    | '[' values ']'
-    ;
+/* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
+optional_date_range: 
+    %empty                                                                      { $$ = NULL; }
+    | START_DATE DATE END_DATE DATE                                             { $$ = createDateRangeSemanticAction($2, $4); }
+;
 
-values:
-    json_value
-    | values ',' json_value
-    ;
-
-
-
-
+optional_sort_by: 
+    %empty                                                                      { $$ = NULL; }
+    | SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES                                { $$ = $3; }
+;
 
 %%
-
-

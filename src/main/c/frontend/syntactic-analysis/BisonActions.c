@@ -73,11 +73,33 @@ json * createJSONSemanticAction(json_object * json_object){
 	return newJson;
 }
 
-json_object * createJSONObjectSemanticAction(char * key, char * value){ //	DEBUG ONLY
+json_object * createJSONObjectSemanticAction(char * key, json_value * value){
 	json_object * new_json_object = calloc(1, sizeof(json_object));
 	new_json_object->key = key;
 	new_json_object->value = value;
 	return new_json_object;
+}
+
+json_value * createJSONValueSemanticAction(JSONValueType type, void * data){
+	json_value * new_json_value = calloc(1, sizeof(json_value));
+	new_json_value->type = type;
+	switch (type){
+		case JSON_STRING:
+			new_json_value->value.string = (char *) data;
+			break;
+		case JSON_NUMBER:
+			new_json_value->value.number = *((int *) data);
+			break;
+		case JSON_ARRAY:
+		case JSON_OBJECT:
+			new_json_value->value.array = (struct json_value *) data;
+			break;
+	}	// TODO: otros tipos de dato? true, false y null?
+	return new_json_value;
+}
+
+json_value * createJSONIntegerValueSemanticAction(JSONValueType type, int data){
+	return createJSONValueSemanticAction(type, &data);
 }
 
 DateRange * createDateRangeSemanticAction(char * start_date, char * end_date) {

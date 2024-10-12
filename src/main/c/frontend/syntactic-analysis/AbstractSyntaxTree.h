@@ -39,28 +39,39 @@ struct json{
 	json_object * json_object;
 };
 
+typedef enum JSONValueType JSONValueType;
+
+enum JSONValueType{
+	JSON_NULL, 
+	JSON_TRUE, 
+	JSON_FALSE, 
+	JSON_NUMBER, 
+	JSON_STRING, 
+	JSON_ARRAY, 
+	JSON_OBJECT
+};
+
 struct json_value {
-    enum { JSON_NULL, JSON_TRUE, JSON_FALSE, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_OBJECT } type;
+    JSONValueType type;
     union {
-        double number;
-        char *string;
-        struct json_value *array; // For simplicity, pointer to the first element
-        struct json_value *object; // Pointer to the first key-value pair
+        int number;
+        char * string;
+        struct json_value * array; // For simplicity, pointer to the first element
+        struct json_value * object; // Pointer to the first key-value pair
     } value;
 };
 
 struct json_object{
 	char * key;
-	char * value;
-	;
+	json_value * value;
 };
 //////////JSON///////////////
 
 struct Program {
-		union{
-			Expression * expression;
-			Sentence * sentence;
-		};
+	union{
+		Expression * expression;
+		Sentence * sentence;
+	};
 };
 
 struct Sentence{
