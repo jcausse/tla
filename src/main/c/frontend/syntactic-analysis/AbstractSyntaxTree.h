@@ -21,9 +21,9 @@ typedef struct Expression Expression;
 typedef struct Program Program;
 typedef struct Initializer Initializer;
 typedef struct Sentence Sentence;
-typedef struct json json;
-typedef struct json_value json_value;
-typedef struct json_object json_object;
+typedef struct JSONBase JSONBase;
+typedef struct JSONValue JSONValue;
+typedef struct JSONKeyValuePair JSONKeyValuePair;
 typedef struct DateRange DateRange;
 
 
@@ -35,8 +35,9 @@ typedef struct DateRange DateRange;
 
 //////////JSON///////////////
 
-struct json{
-	json_object * json_object;
+struct JSONBase{
+	JSONKeyValuePair * kv_pair;
+	JSONBase * next_kv_pair;
 };
 
 typedef enum JSONValueType JSONValueType;
@@ -51,19 +52,19 @@ enum JSONValueType{
 	JSON_OBJECT
 };
 
-struct json_value {
+struct JSONValue {
     JSONValueType type;
     union {
         int number;
         char * string;
-        struct json_value * array; // For simplicity, pointer to the first element
-        struct json_value * object; // Pointer to the first key-value pair
+        struct JSONValue * array; // For simplicity, pointer to the first element
+        struct JSONValue * object; // Pointer to the first key-value pair
     } value;
 };
 
-struct json_object{
+struct JSONKeyValuePair{
 	char * key;
-	json_value * value;
+	JSONValue * value;
 };
 //////////JSON///////////////
 
@@ -76,7 +77,7 @@ struct Program {
 
 struct Sentence{
 	Initializer * initializer;
-	json * json;
+	JSONBase * json;
 	char * sort_by;
 	DateRange * date_range;
 };

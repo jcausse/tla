@@ -149,7 +149,6 @@
 <JSON_COMMA_OR_OBJ_END>"}" {
     BEGIN(JSON_OBJ);
     return EndJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE);
-
 }
 
 %%

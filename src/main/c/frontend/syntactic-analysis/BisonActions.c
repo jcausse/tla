@@ -46,7 +46,7 @@ Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence 
 	return program;
 }
 
-Sentence * createSentenceSemanticAction(Initializer * initializer, json * json, DateRange * date_range, char * sort_by) {
+Sentence * createSentenceSemanticAction(Initializer * initializer, JSONBase * json, DateRange * date_range, char * sort_by) {
     _logSyntacticAnalyzerAction(__FUNCTION__);
     Sentence * sentence = calloc(1, sizeof(Sentence));
     sentence->initializer = initializer;
@@ -67,21 +67,22 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 	return initializer;
 }
 
-json * createJSONSemanticAction(json_object * json_object){
-	json * newJson = calloc(1, sizeof(json));
-	newJson->json_object = json_object;
+JSONBase * createJSONSemanticAction(JSONKeyValuePair * kv_pair, JSONBase * next_json_base){
+	JSONBase * newJson = calloc(1, sizeof(JSONBase));
+	newJson->kv_pair = kv_pair;
+	newJson->next_kv_pair = next_json_base;
 	return newJson;
 }
 
-json_object * createJSONObjectSemanticAction(char * key, json_value * value){
-	json_object * new_json_object = calloc(1, sizeof(json_object));
-	new_json_object->key = key;
-	new_json_object->value = value;
-	return new_json_object;
+JSONKeyValuePair * createJSONObjectSemanticAction(char * key, JSONValue * value){
+	JSONKeyValuePair * new_json_kv_pair = calloc(1, sizeof(JSONKeyValuePair));
+	new_json_kv_pair->key = key;
+	new_json_kv_pair->value = value;
+	return new_json_kv_pair;
 }
 
-json_value * createJSONValueSemanticAction(JSONValueType type, void * data){
-	json_value * new_json_value = calloc(1, sizeof(json_value));
+JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data){
+	JSONValue * new_json_value = calloc(1, sizeof(JSONValue));
 	new_json_value->type = type;
 	switch (type){
 		case JSON_STRING:
@@ -92,13 +93,13 @@ json_value * createJSONValueSemanticAction(JSONValueType type, void * data){
 			break;
 		case JSON_ARRAY:
 		case JSON_OBJECT:
-			new_json_value->value.array = (struct json_value *) data;
+			new_json_value->value.array = (struct JSONValue *) data;
 			break;
 	}	// TODO: otros tipos de dato? true, false y null?
 	return new_json_value;
 }
 
-json_value * createJSONIntegerValueSemanticAction(JSONValueType type, int data){
+JSONValue * createJSONIntegerValueSemanticAction(JSONValueType type, int data){
 	return createJSONValueSemanticAction(type, &data);
 }
 

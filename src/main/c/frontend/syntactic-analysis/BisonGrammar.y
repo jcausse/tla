@@ -8,7 +8,7 @@
 	int integer;
 	char * string;
 	Token token;
-	json_value * json_value;
+	JSONValue * json_value_t;
 	
     /** Non-terminals. */
 	Constant * constant;
@@ -17,9 +17,9 @@
 	Program * program;
 	Initializer * initializer;
 	Sentence * sentence;
-	json * json;
-    json_object * json_object;
-    json_object * json_array; //TODO: CAMBIAR el tipo
+	JSONBase * json_t;
+    JSONKeyValuePair * json_kv_pair_t;
+    JSONKeyValuePair * json_array_t; //TODO: CAMBIAR el tipo
     DateRange * date_range;
 }
 
@@ -82,10 +82,10 @@
 %type <string> optional_sort_by
 
 /*** JSON Tokens ***/
-%type <json> json
-%type <json_value> json_value
-%type <json_object> json_object
-%type <json_array> json_array
+%type <json_t> json
+%type <json_value_t> json_value
+%type <json_kv_pair_t> json_kv_pair
+%type <json_array_t> json_array
 
 
 %%
@@ -104,7 +104,9 @@ program:
  * Any sentence starts with an initializer, followed by the "JSON" keyword, a valid json, and optional date_range and sort_by parameters.
  */
 sentence: 
-    initializer JSON json optional_date_range optional_sort_by                  { $$ = createSentenceSemanticAction($1, $3, $4, $5); }
+    initializer JSON CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE optional_date_range optional_sort_by {
+        $$ = createSentenceSemanticAction($1, $4, $6, $7); 
+    }
 ;
 
 /**
@@ -120,14 +122,15 @@ initializer:
  * Models a JSON file, consisting in curly braces with at least one json_object inside.
  */
 json: 
-    CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE                          { $$ = createJSONSemanticAction($2); }
+    json_kv_pair                                                                { $$ = createJSONSemanticAction($1, NULL); }
+    | json_kv_pair COMMA json                                                   { $$ = createJSONSemanticAction($1, $3); }
 ;
 
 /**
- * Production rule: json_object
- * JSON Objects are key-value pairs separated by colons, where the KEY is always a string, and the value is any json_value.
+ * Production rule: json_kv_pair
+ * JSON key-value pairs separated by colons, where the KEY is always a string, and the value is any json_value.
  */
-json_object:
+json_kv_pair:
     DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON json_value                         { $$ = createJSONObjectSemanticAction($2, $5); }
 ;
 
@@ -167,7 +170,7 @@ json_value:
     DOUBLE_QUOTES STRING DOUBLE_QUOTES              { $$ = createJSONValueSemanticAction        (JSON_STRING,   $2); }
     | INTEGER                                       { $$ = createJSONIntegerValueSemanticAction (JSON_NUMBER,   $1); }
     | json_array                                    { $$ = createJSONValueSemanticAction        (JSON_ARRAY,    $1); }
-    | json_object                                   { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $1); }
+    | json_kv_pair                                  { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $1); }
 ;
 
 /* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
