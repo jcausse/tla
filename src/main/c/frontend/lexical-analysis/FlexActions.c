@@ -1,10 +1,15 @@
+/********************************************************************************************************/
+/*** MODULE INTERNAL STATE ******************************************************************************/
+/********************************************************************************************************/
+
+/*** Include header files ***/
 #include "FlexActions.h"
 
-/* MODULE INTERNAL STATE */
-
+/*** Logger ***/
 static Logger * _logger = NULL;
 static boolean _logIgnoredLexemes = true;
 
+/*** Public function definitions ***/
 void initializeFlexActionsModule() {
 	_logIgnoredLexemes = getBooleanOrDefault("LOG_IGNORED_LEXEMES", _logIgnoredLexemes);
 	_logger = createLogger("FlexActions");
@@ -16,13 +21,7 @@ void shutdownFlexActionsModule() {
 	}
 }
 
-/* PRIVATE FUNCTIONS */
-
-static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyzerContext * lexicalAnalyzerContext);
-
-/**
- * Logs a lexical-analyzer context in DEBUGGING level.
- */
+/*** Private function declarations ***/
 static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	char * escapedLexeme = escape(lexicalAnalyzerContext->lexeme);
 	logDebugging(_logger, "%s: %s (context = %d, length = %d, line = %d)",
@@ -34,20 +33,91 @@ static void _logLexicalAnalyzerContext(const char * functionName, LexicalAnalyze
 	free(escapedLexeme);
 }
 
-/* PUBLIC FUNCTIONS */
+/********************************************************************************************************/
+/*** FLEX LEXEME ACTIONS ********************************************************************************/
+/********************************************************************************************************/
 
-/*	CONTEXT SWITCHERS	*/
-Token BeginStringContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+/**************************************** General Lexeme Actions ****************************************/
+
+/*** Integers ***/
+Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->integer = atoi(lexicalAnalyzerContext->lexeme);
+	return INTEGER;
+}
+
+/*** Strings ***/
+Token BeginStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return DOUBLE_QUOTES;
 }
-
+Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
+	printf("Matched string: %s\n", lexicalAnalyzerContext->lexeme); // Debug output
+    return STRING;
+}
 Token EndStringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	lexicalAnalyzerContext->semanticValue->token = token;
 	return DOUBLE_QUOTES;
 }
+
+/****************************************** DSL Lexeme Actions ******************************************/
+
+/*** CREATE_FIXTURE ***/
+Token CreateFixtureLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return token;
+}
+
+/*** SORT_BY ***/
+Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return SORT_BY;
+}
+
+/*** Dates ***/
+Token StartDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->token = token;
+    return START_DATE;
+}
+Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
+    return DATE;
+}
+Token EndDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->token = token;
+    return END_DATE;
+}
+
+/****************************************** JSON Lexeme Actions *****************************************/
+
+/*** JSON Objects ***/
+Token BeginJSONObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_OPEN;
+}
+Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return COLON;
+}
+Token EndJSONObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return CURLY_BRACKET_CLOSE;
+}
+
+
+// TODO: clasificar
 
 Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
@@ -57,18 +127,6 @@ Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerConte
 
 void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-}
-
-Token BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return CURLY_BRACKET_OPEN;
-}
-
-Token EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return CURLY_BRACKET_CLOSE;
 }
 
 Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
@@ -83,79 +141,20 @@ Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 	return CURLY_BRACKET_CLOSE;
 }
 
-/*	TOKENS	*/
+/************************************* Miscellaneous Lexeme Actions *************************************/
 
-Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return COLON;
-}
-
-Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->integer = atoi(lexicalAnalyzerContext->lexeme);
-	return INTEGER;
-}
-
-Token StringLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-    lexicalAnalyzerContext->semanticValue->string = lexicalAnalyzerContext->lexeme;
-	printf("Matched string: %s\n", lexicalAnalyzerContext->lexeme); // Debug output
-    return STRING;
-}
-
-Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return SORT_BY;
-}
-
-Token StartDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-    lexicalAnalyzerContext->semanticValue->token = token;
-    return START_DATE;
-}
-
-Token EndDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-    lexicalAnalyzerContext->semanticValue->token = token;
-    return END_DATE;
-}
-
-Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
-    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-    lexicalAnalyzerContext->semanticValue->string = strdup(lexicalAnalyzerContext->lexeme);
-    return DATE;
-}
-
-
-/*	EXTRA FUNCTIONS	*/
-void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
-	if (_logIgnoredLexemes) {
-		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	}
-}
-
+/*** Unknown Lexemes ***/
 Token UnknownLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	return UNKNOWN;
 }
 
-
-
-
-
-
-
-Token CreateFixtureLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return token;
+/*** Ignored Lexemes ***/
+void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
+	if (_logIgnoredLexemes) {
+		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	}
 }
-
-
-
-
 
 
 
