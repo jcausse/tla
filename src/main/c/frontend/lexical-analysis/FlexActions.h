@@ -43,4 +43,7 @@ Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerC
 Token JsonObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token StartDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token EndDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token DateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 #endif

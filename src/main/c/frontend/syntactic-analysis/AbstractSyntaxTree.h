@@ -26,6 +26,7 @@ typedef struct Sentence Sentence;
 typedef struct json json;
 typedef struct json_value json_value;
 typedef struct json_object json_object;
+typedef struct DateRange DateRange;
 
 
 /**
@@ -85,10 +86,16 @@ struct Factor {
 	FactorType type;
 };
 
+struct DateRange {
+    char * start_date;
+    char * end_date;
+};
+
 struct Sentence{
 	Initializer * initializer;
 	json * json;
 	char * sort_by;
+	DateRange * date_range;
 };
 
 struct Expression {

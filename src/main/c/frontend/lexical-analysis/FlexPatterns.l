@@ -75,6 +75,11 @@
     }
 }
 
+"START_DATE"    { return StartDateLexemeAction(createLexicalAnalyzerContext(), START_DATE); }
+
+"END_DATE"      { return EndDateLexemeAction(createLexicalAnalyzerContext(), END_DATE); }
+
+[0-3][0-9]-[0-1][0-9]-[0-9]{2}   { return DateLexemeAction(createLexicalAnalyzerContext()); }
 
 "CREATE_FIXTURE"                    { return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE); }
 
@@ -82,8 +87,9 @@
 
 [[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
 
-
 .									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
+
+
 
 %%
 

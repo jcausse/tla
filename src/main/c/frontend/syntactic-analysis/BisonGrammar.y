@@ -23,6 +23,8 @@
 	Sentence * sentence;
 	json * json;
     json_object * json_object;
+    DateRange * date_range;
+
 
 }
 
@@ -63,6 +65,11 @@
 %token <token> COLON
 /*SORT_BY*/
 %token <token> SORT_BY
+/*DATE TOKENS*/
+%token <token> START_DATE
+%token <token> END_DATE
+%token <string> DATE
+
 
 /** Non-terminals. */
 %type <program> program
@@ -71,6 +78,8 @@
 %type <json> json
 %type <json_value> json_value
 %type <json_object> json_object
+%type <date_range> optional_date_range
+%type <string> optional_sort_by
 
 
 /**
@@ -96,11 +105,12 @@ json: CURLY_BRACKET_OPEN json_object CURLY_BRACKET_CLOSE{$$ = createJSONSemantic
 ;
 
 
-sentence: initializer JSON json SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES{
-    $$ = createSentenceSemanticAction($1, $3, $6);
-    | /*SENTENCE CON MENOS COSAS*/
+sentence: initializer JSON json optional_date_range optional_sort_by
+{
+    $$ = createSentenceSemanticAction($1, $3, $4, $5);
 }
 ;
+
 
 
 initializer: CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES 
@@ -138,6 +148,25 @@ values:
     | values ',' json_value
     ;
 
+/* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
+optional_date_range:
+    { $$ = NULL; }
+    | START_DATE DATE END_DATE DATE
+    {
+        $$ = createDateRangeSemanticAction($2, $4);
+    }
+;
+
+optional_sort_by:
+    { $$ = NULL; }
+    | SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES
+    {
+        $$ = $3;
+    }
+;
+
 
 
 %%
+
+

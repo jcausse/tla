@@ -96,17 +96,25 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 	return initializer;
 }
 
-Sentence * createSentenceSemanticAction(Initializer * initializer, json * json,
-	char * sortby)
-	{
-	_logSyntacticAnalyzerAction(__FUNCTION__);
-	Sentence * sentence = calloc(1, sizeof(Sentence));
-	sentence->initializer = initializer;
-	sentence->json = json;
-	sentence->sort_by = sortby;
-	printf("\nSentence successful!\n");
-	return sentence;
+DateRange * createDateRangeSemanticAction(char * start_date, char * end_date) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    DateRange * date_range = calloc(1, sizeof(DateRange));
+    date_range->start_date = strdup(start_date);
+    date_range->end_date = strdup(end_date);
+    return date_range;
 }
+
+Sentence * createSentenceSemanticAction(Initializer * initializer, json * json, DateRange * date_range, char * sort_by) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    Sentence * sentence = calloc(1, sizeof(Sentence));
+    sentence->initializer = initializer;
+    sentence->json = json;
+    sentence->date_range = date_range;
+    sentence->sort_by = sort_by;
+    printf("\nSentence successful!\n");
+    return sentence;
+}
+
 
 json * createJSONSemanticAction(json_object * json_object){
 	json * newJson = calloc(1, sizeof(json));
