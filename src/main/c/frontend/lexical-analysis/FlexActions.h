@@ -36,6 +36,9 @@ Token EndStringLexemeAction         (LexicalAnalyzerContext * lexicalAnalyzerCon
 /*** CREATE_FIXTURE ***/
 Token CreateFixtureLexemeAction     (LexicalAnalyzerContext * LexicalAnalyzerContext, Token token);
 
+/*** JSON (keyword) ***/
+Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
 /*** SORT_BY ***/
 Token SortByLexemeAction            (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
@@ -54,11 +57,9 @@ Token EndJSONObjectLexemeAction     (LexicalAnalyzerContext * lexicalAnalyzerCon
 /*** JSON Comma ***/
 Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
-// TODO: clasificar
-Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-void  EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
-Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+/*** JSON Types ***/
+Token JSONBoolLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token JSONNullLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 /************************************* Miscellaneous Lexeme Actions *************************************/
 

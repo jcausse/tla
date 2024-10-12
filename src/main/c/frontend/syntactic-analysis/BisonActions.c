@@ -89,7 +89,11 @@ JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data){
 			new_json_value->value.string = (char *) data;
 			break;
 		case JSON_NUMBER:
+		case JSON_BOOL:
 			new_json_value->value.number = *((int *) data);
+			break;
+		case JSON_NULL:
+			new_json_value->value.object = NULL;
 			break;
 		case JSON_ARRAY:
 		case JSON_OBJECT:

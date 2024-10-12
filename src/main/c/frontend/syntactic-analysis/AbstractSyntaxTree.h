@@ -44,8 +44,7 @@ typedef enum JSONValueType JSONValueType;
 
 enum JSONValueType{
 	JSON_NULL, 
-	JSON_TRUE, 
-	JSON_FALSE, 
+	JSON_BOOL,
 	JSON_NUMBER, 
 	JSON_STRING, 
 	JSON_ARRAY, 

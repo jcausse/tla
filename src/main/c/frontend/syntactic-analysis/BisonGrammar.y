@@ -6,6 +6,8 @@
 %union {
 	/** Terminals. */
 	int integer;
+    int boolean;
+    void * null_t;
 	char * string;
 	Token token;
 	JSONValue * json_value_t;
@@ -64,6 +66,8 @@
 %token <token> DOUBLE_QUOTES            /* " */
 %token <token> COLON                    /* : */
 %token <token> COMMA                    /* , */
+%token <boolean> JSON_BOOL_TOKEN        /* true or false */
+%token <null_t> JSON_NULL_TOKEN         /* null */
 
 /*** Date Tokens ***/
 %token <token> START_DATE               /* START_DATE */
@@ -169,6 +173,8 @@ json_array_values:
 json_value:
     DOUBLE_QUOTES STRING DOUBLE_QUOTES              { $$ = createJSONValueSemanticAction        (JSON_STRING,   $2); }
     | INTEGER                                       { $$ = createJSONIntegerValueSemanticAction (JSON_NUMBER,   $1); }
+    | JSON_BOOL_TOKEN                               { $$ = createJSONIntegerValueSemanticAction (JSON_BOOL,     $1); }
+    | JSON_NULL_TOKEN                               { $$ = createJSONValueSemanticAction        (JSON_NULL,     $1); }
     | json_array                                    { $$ = createJSONValueSemanticAction        (JSON_ARRAY,    $1); }
     | json_kv_pair                                  { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $1); }
 ;

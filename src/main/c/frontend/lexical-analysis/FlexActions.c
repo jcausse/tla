@@ -73,6 +73,13 @@ Token CreateFixtureLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext,
 	return token;
 }
 
+/*** JSON (keyword) ***/
+Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return JSON;
+}
+
 /*** SORT_BY ***/
 Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
@@ -123,28 +130,16 @@ Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerCon
 	return COMMA;
 }
 
-// TODO: clasificar
-
-Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+/*** JSON Types ***/
+Token JSONBoolLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return JSON;
+	lexicalAnalyzerContext->semanticValue->integer = strcmp(lexicalAnalyzerContext->lexeme, "true") == 0 ? 1 : 0;
+	return JSON_BOOL_TOKEN;
 }
-
-void EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
+Token JSONNullLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-}
-
-Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return CURLY_BRACKET_OPEN;
-}
-
-Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
-	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
-	return CURLY_BRACKET_CLOSE;
+	lexicalAnalyzerContext->semanticValue->string = NULL;
+	return JSON_NULL_TOKEN;
 }
 
 /************************************* Miscellaneous Lexeme Actions *************************************/
@@ -161,6 +156,3 @@ void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext) {
 		_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
 	}
 }
-
-
-

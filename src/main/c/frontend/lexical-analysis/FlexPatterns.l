@@ -14,8 +14,10 @@
  */
 %x IN_STRING
 
+/* JSON_FILENAME: context expecting the name of a .json file */
 %x JSON_FILENAME
 
+/* JSON structure contexts */
 %x JSON_OBJ
 %x JSON_OBJ_KEY_QUOTES
 %x JSON_OBJ_KEY_STRING
@@ -23,10 +25,6 @@
 %x JSON_OBJ_VAL
 %x JSON_OBJ_VAL_STRING
 %x JSON_COMMA_OR_OBJ_END
-
-%x JSON_MEMBER
-%x JSON_ARRAY
-
 
 /**
  * Reusable patterns.
@@ -135,11 +133,23 @@
 }
 <JSON_OBJ_VAL_STRING>"\"" {
     BEGIN(JSON_COMMA_OR_OBJ_END);
-    return EndStringLexemeAction(createLexicalAnalyzerContext() ,DOUBLE_QUOTES);
+    return EndStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
 }
 <JSON_OBJ_VAL>[[:digit:]]+ {
     BEGIN(JSON_COMMA_OR_OBJ_END);
     return IntegerLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_OBJ_VAL>"true" {
+    BEGIN(JSON_COMMA_OR_OBJ_END);
+    return JSONBoolLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_OBJ_VAL>"false" {
+    BEGIN(JSON_COMMA_OR_OBJ_END);
+    return JSONBoolLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_OBJ_VAL>"null" {
+    BEGIN(JSON_COMMA_OR_OBJ_END);
+    return JSONNullLexemeAction(createLexicalAnalyzerContext());
 }
 
 <JSON_COMMA_OR_OBJ_END>"," {
