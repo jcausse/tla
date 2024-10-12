@@ -19,16 +19,10 @@ void shutdownBisonActionsModule();
  * Bison semantic actions.
  */
 
-Constant * IntegerConstantSemanticAction(const int value);
-Expression * ArithmeticExpressionSemanticAction(Expression * leftExpression, Expression * rightExpression, ExpressionType type);
-Expression * FactorExpressionSemanticAction(Factor * factor);
-Factor * ConstantFactorSemanticAction(Constant * constant);
-Factor * ExpressionFactorSemanticAction(Expression * expression);
 Program * SentenceProgramSemanticAction(CompilerState * compilerState, Sentence * sentence);
-Initializer * createInitializerSemanticAction(int numberTourn, char * nameTourn);
 Sentence * createSentenceSemanticAction(Initializer * initializer, json * json, DateRange * date_range, char * sort_by);
+Initializer * createInitializerSemanticAction(int numberTourn, char * nameTourn);
 json * createJSONSemanticAction(json_object * json_object);
-DateRange * createDateRangeSemanticAction(char * start_date, char * end_date);
-
 json_object * createJSONObjectSemanticAction(char * key, char * value); // DEBUG ONLY
+DateRange * createDateRangeSemanticAction(char * start_date, char * end_date);
 #endif

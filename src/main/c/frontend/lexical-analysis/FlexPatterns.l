@@ -1,7 +1,5 @@
 %{
-
 #include "FlexActions.h"
-
 %}
 
 /**
@@ -20,7 +18,6 @@
 %x JSON_MEMBER
 %x JSON_ARRAY
 %x JSON_OBJECT_STRING
-%x SORTBY
 
 /**
  * Reusable patterns.
@@ -31,17 +28,23 @@
 
 %%
 
+"CREATE_FIXTURE"                    {return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE);}
+
+[[:digit:]]+						{return IntegerLexemeAction(createLexicalAnalyzerContext());}
+
+[[:space:]]+						{IgnoredLexemeAction(createLexicalAnalyzerContext());}
+
 "\""                                {BEGIN(IN_STRING); return BeginStringContextLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);}
 <IN_STRING>[A-Za-z0-9]*             {return StringLexemeAction(createLexicalAnalyzerContext());}
 <IN_STRING>"\""                     {BEGIN(INITIAL); return EndStringLexemeAction(createLexicalAnalyzerContext(),DOUBLE_QUOTES);}
 
 
 <JSON_OBJECT>"\""                   {BEGIN(JSON_OBJECT_STRING); return BeginStringContextLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);}
-<JSON_OBJECT_STRING>[A-Za-z0-9]*          {return StringLexemeAction(createLexicalAnalyzerContext());}
+<JSON_OBJECT_STRING>[A-Za-z0-9]*    {return StringLexemeAction(createLexicalAnalyzerContext());}
 <JSON_OBJECT_STRING>"\""            {BEGIN(JSON_OBJECT);return EndStringLexemeAction(createLexicalAnalyzerContext(),DOUBLE_QUOTES);}
 
 
-"{"                                 { BEGIN(JSON_OBJECT); return BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
+"{"                                 {BEGIN(JSON_OBJECT); return BeginJSONObjectContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
 
 "JSON"                              {BEGIN(JSON); return BeginJSONContextLexemeAction(createLexicalAnalyzerContext(), JSON);}
 <JSON>"}"                           {EndJSONContextLexemeAction(createLexicalAnalyzerContext()); BEGIN(INITIAL);}
@@ -51,11 +54,7 @@
 
 <JSON_OBJECT>":"                    {return ColonLexemeAction(createLexicalAnalyzerContext(), COLON);}
 <JSON_OBJECT>"{"                    {BEGIN(JSON_MEMBER); return BeginJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);}
-<JSON_MEMBER>"}"                    {BEGIN(JSON_OBJECT); return EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE); }
-
-"SORT_BY"                           { return SortByLexemeAction(createLexicalAnalyzerContext(), SORT_BY);}
-
-
+<JSON_MEMBER>"}"                    {BEGIN(JSON_OBJECT); return EndJSONMemberContextLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE);}
 
 <JSON>([[:alnum:]_]+[[:space:]]*)*.json {
     yyin = fopen(yytext, "r");
@@ -75,19 +74,15 @@
     }
 }
 
-"START_DATE"    { return StartDateLexemeAction(createLexicalAnalyzerContext(), START_DATE); }
+"SORT_BY"                           {return SortByLexemeAction(createLexicalAnalyzerContext(), SORT_BY);}
 
-"END_DATE"      { return EndDateLexemeAction(createLexicalAnalyzerContext(), END_DATE); }
+"START_DATE"                        {return StartDateLexemeAction(createLexicalAnalyzerContext(), START_DATE);}
 
-[0-3][0-9]-[0-1][0-9]-[0-9]{2}   { return DateLexemeAction(createLexicalAnalyzerContext()); }
+"END_DATE"                          {return EndDateLexemeAction(createLexicalAnalyzerContext(), END_DATE);}
 
-"CREATE_FIXTURE"                    { return CreateFixtureLexemeAction(createLexicalAnalyzerContext(), CREATE_FIXTURE); }
+[0-3][0-9]-[0-1][0-9]-[0-9]{2}      {return DateLexemeAction(createLexicalAnalyzerContext());}
 
-[[:digit:]]+						{ return IntegerLexemeAction(createLexicalAnalyzerContext()); }
-
-[[:space:]]+						{ IgnoredLexemeAction(createLexicalAnalyzerContext()); }
-
-.									{ return UnknownLexemeAction(createLexicalAnalyzerContext()); }
+.									{return UnknownLexemeAction(createLexicalAnalyzerContext());}
 
 
 

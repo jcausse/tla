@@ -1,7 +1,5 @@
 %{
-
 #include "BisonActions.h"
-
 %}
 
 // You touch this, and you die.
@@ -45,10 +43,13 @@
 */
 
 /** Terminals. */
+/*  GENERAL TOKENS*/
 %token <integer> INTEGER
 %token <string> STRING
-%token <token> CREATE_FIXTURE
 %token <token> UNKNOWN
+
+/* CREATE_FIXTURE*/
+%token <token> CREATE_FIXTURE
 /* " */
 %token <token> DOUBLE_QUOTES
 /* { */
@@ -98,6 +99,7 @@ program: sentence	{$$ = SentenceProgramSemanticAction(currentCompilerState(), $1
 ;
 
 //  "key":"value"
+//  El STRING en el Value podríamos convertirlo en un json_value
 json_object: DOUBLE_QUOTES STRING DOUBLE_QUOTES COLON DOUBLE_QUOTES STRING DOUBLE_QUOTES {$$ = createJSONObjectSemanticAction($2, $6);}
     ;
 
@@ -117,6 +119,20 @@ initializer: CREATE_FIXTURE INTEGER DOUBLE_QUOTES STRING DOUBLE_QUOTES
 {$$ = createInitializerSemanticAction($2, $4);}
 ;
 
+/* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
+optional_date_range: %empty {$$ = NULL;}
+    | START_DATE DATE END_DATE DATE
+    {
+        $$ = createDateRangeSemanticAction($2, $4);
+    }
+;
+
+optional_sort_by: %empty {$$ = NULL;}
+    | SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES
+    {
+        $$ = $3;
+    }
+;
 
 
 members:
@@ -148,22 +164,7 @@ values:
     | values ',' json_value
     ;
 
-/* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */
-optional_date_range:
-    { $$ = NULL; }
-    | START_DATE DATE END_DATE DATE
-    {
-        $$ = createDateRangeSemanticAction($2, $4);
-    }
-;
 
-optional_sort_by:
-    { $$ = NULL; }
-    | SORT_BY DOUBLE_QUOTES STRING DOUBLE_QUOTES
-    {
-        $$ = $3;
-    }
-;
 
 
 

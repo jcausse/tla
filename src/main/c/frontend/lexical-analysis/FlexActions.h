@@ -21,8 +21,6 @@ void shutdownFlexActionsModule();
  * Flex lexeme processing actions.
  */
 
-void BeginMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-void EndMultilineCommentLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 void IgnoredLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 Token IntegerLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
@@ -40,6 +38,7 @@ Token BeginJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyze
 Token EndJSONObjectContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token BeginJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token EndJSONMemberContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
 Token JsonObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
 Token ColonLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token SortByLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);

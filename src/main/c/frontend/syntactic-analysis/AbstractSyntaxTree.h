@@ -14,12 +14,10 @@ void shutdownAbstractSyntaxTreeModule();
  * This typedefs allows self-referencing types.
  */
 
-typedef enum ExpressionType ExpressionType;
-typedef enum FactorType FactorType;
-
-typedef struct Constant Constant;
+/*	DO NOT MOVE THIS (YET)	*/
 typedef struct Expression Expression;
-typedef struct Factor Factor;
+/**/
+
 typedef struct Program Program;
 typedef struct Initializer Initializer;
 typedef struct Sentence Sentence;
@@ -33,25 +31,14 @@ typedef struct DateRange DateRange;
  * Node types for the Abstract Syntax Tree (AST).
  */
 
-// TODO: quitar los de la calculadora
-enum ExpressionType {
-	ADDITION,
-	DIVISION,
-	FACTOR,
-	MULTIPLICATION,
-	SUBTRACTION,
-	CREATEFIXTURE,
-	INITIALIZER,
-	JSONVALUE,
-	JSONOBJECT
-};
-
-enum FactorType {
-	CONSTANT,
-	EXPRESSION
-};
+// TODO: Remove the Deprecated Zone
 
 //////////JSON///////////////
+
+struct json{
+	json_object * json_object;
+};
+
 struct json_value {
     enum { JSON_NULL, JSON_TRUE, JSON_FALSE, JSON_NUMBER, JSON_STRING, JSON_ARRAY, JSON_OBJECT } type;
     union {
@@ -69,9 +56,52 @@ struct json_object{
 };
 //////////JSON///////////////
 
+struct Program {
+		union{
+			Expression * expression;
+			Sentence * sentence;
+		};
+};
+
+struct Sentence{
+	Initializer * initializer;
+	json * json;
+	char * sort_by;
+	DateRange * date_range;
+};
+
 struct Initializer{
 	 int tournamentAmount;
 	 char * tournamentName;
+};
+
+struct DateRange {
+    char * start_date;
+    char * end_date;
+};
+
+/*	THE DEPRECATED ZONE	(VENTURE NO FURHTER!!)	*/
+/*	Deleting any of these causes compilation to fail
+	due to the backend expecting them to be present.
+*/
+
+typedef enum ExpressionType ExpressionType;
+typedef enum FactorType FactorType;
+
+typedef struct Constant Constant;
+typedef struct Factor Factor;
+
+enum ExpressionType {
+	ADDITION,
+	DIVISION,
+	FACTOR,
+	MULTIPLICATION,
+	SUBTRACTION
+};
+
+enum FactorType {
+	CONSTANT,
+	EXPRESSION
 };
 
 struct Constant {
@@ -86,18 +116,6 @@ struct Factor {
 	FactorType type;
 };
 
-struct DateRange {
-    char * start_date;
-    char * end_date;
-};
-
-struct Sentence{
-	Initializer * initializer;
-	json * json;
-	char * sort_by;
-	DateRange * date_range;
-};
-
 struct Expression {
 	union {
 		Factor * factor;
@@ -110,16 +128,7 @@ struct Expression {
 	ExpressionType type;
 };
 
-struct Program {
-		union{
-			Expression * expression;
-			Sentence * sentence;
-		};
-};
-
-struct json{
-	json_object * json_object;
-};
+/*	END OF THE DEPRECATED ZONE	*/
 
 /**
  * Node recursive destructors.
