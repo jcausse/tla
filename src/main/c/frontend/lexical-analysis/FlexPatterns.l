@@ -113,7 +113,7 @@
     BEGIN(JSON_OBJ_KEY_STRING); 
     return BeginStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
 }
-<JSON_OBJ_KEY_STRING>([A-Za-z0-9]|[[:space:]])* {
+<JSON_OBJ_KEY_STRING>([A-Za-z0-9_\-]|[[:space:]])* {
     return StringLexemeAction(createLexicalAnalyzerContext());
 }
 <JSON_OBJ_KEY_STRING>"\"" {
@@ -130,7 +130,7 @@
     BEGIN(JSON_OBJ_VAL_STRING);
     return BeginStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
 }
-<JSON_OBJ_VAL_STRING>([A-Za-z0-9]|[[:space:]])* {
+<JSON_OBJ_VAL_STRING>([A-Za-z0-9_\-]|[[:space:]])* {
     return StringLexemeAction(createLexicalAnalyzerContext());
 }
 <JSON_OBJ_VAL_STRING>"\"" {
