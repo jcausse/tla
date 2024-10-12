@@ -116,6 +116,12 @@ Token EndJSONObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext,
 	return CURLY_BRACKET_CLOSE;
 }
 
+/*** JSON Comma ***/
+Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+	lexicalAnalyzerContext->semanticValue->token = token;
+	return COMMA;
+}
 
 // TODO: clasificar
 

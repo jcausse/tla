@@ -51,6 +51,9 @@ Token BeginJSONObjectLexemeAction   (LexicalAnalyzerContext * lexicalAnalyzerCon
 Token ColonLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 Token EndJSONObjectLexemeAction     (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
+/*** JSON Comma ***/
+Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+
 // TODO: clasificar
 Token BeginJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 void  EndJSONContextLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);

@@ -22,6 +22,7 @@
 %x JSON_COLON
 %x JSON_OBJ_VAL
 %x JSON_OBJ_VAL_STRING
+%x JSON_COMMA_OR_OBJ_END
 
 %x JSON_MEMBER
 %x JSON_ARRAY
@@ -45,7 +46,7 @@
 }
 
 [[:space:]]+ {
-    IgnoredLexemeAction(createLexicalAnalyzerContext());\
+    IgnoredLexemeAction(createLexicalAnalyzerContext());
 }
 
 "\"" {
@@ -133,13 +134,22 @@
     return StringLexemeAction(createLexicalAnalyzerContext());
 }
 <JSON_OBJ_VAL_STRING>"\"" {
-    BEGIN(JSON_OBJ_VAL);
+    BEGIN(JSON_COMMA_OR_OBJ_END);
     return EndStringLexemeAction(createLexicalAnalyzerContext() ,DOUBLE_QUOTES);
 }
+<JSON_OBJ_VAL>[[:digit:]]+ {
+    BEGIN(JSON_COMMA_OR_OBJ_END);
+    return IntegerLexemeAction(createLexicalAnalyzerContext());
+}
 
-<JSON_OBJ_VAL>"}" {
+<JSON_COMMA_OR_OBJ_END>"," {
+    BEGIN(JSON_OBJ_KEY_QUOTES);
+    return CommaLexemeAction(createLexicalAnalyzerContext(), COMMA);
+}
+<JSON_COMMA_OR_OBJ_END>"}" {
     BEGIN(JSON_OBJ);
     return EndJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE);
+
 }
 
 %%
