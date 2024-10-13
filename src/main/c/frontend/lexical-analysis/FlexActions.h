@@ -48,6 +48,9 @@ Token DateLexemeAction              (LexicalAnalyzerContext * lexicalAnalyzerCon
 Token EndDateLexemeAction           (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 /****************************************** JSON Lexeme Actions *****************************************/
+/*** JSON Arrays ***/
+Token BracketOpenLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token BracketCloseLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 /*** JSON Objects ***/
 Token BeginJSONObjectLexemeAction   (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);

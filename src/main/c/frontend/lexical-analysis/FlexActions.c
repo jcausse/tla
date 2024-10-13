@@ -106,6 +106,20 @@ Token EndDateLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token
 
 /****************************************** JSON Lexeme Actions *****************************************/
 
+/*** JSON Arrays ***/
+Token BracketOpenLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token) {
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->token = token;
+    return BRACKET_OPEN;
+}
+
+Token BracketCloseLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token) {
+    _logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
+    lexicalAnalyzerContext->semanticValue->token = token;
+    return BRACKET_CLOSE;
+}
+
+
 /*** JSON Objects ***/
 Token BeginJSONObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);

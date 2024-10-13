@@ -118,3 +118,28 @@ DateRange * createDateRangeSemanticAction(char * start_date, char * end_date) {
     date_range->end_date = strdup(end_date);
     return date_range;
 }
+
+
+JSONValue * createJSONArraySemanticAction(JSONValueArray * values) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    JSONValue * jsonValue = calloc(1, sizeof(JSONValue));
+    jsonValue->type = JSON_ARRAY;
+    jsonValue->value.array = values;
+    return jsonValue;
+}
+
+JSONValueArray * createJSONValueArraySingleSemanticAction(JSONValue * value) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    JSONValueArray * array = calloc(1, sizeof(JSONValueArray));
+    array->value = value;
+    array->next = NULL;
+    return array;
+}
+
+JSONValueArray * createJSONValueArraySemanticAction(JSONValue * value, JSONValueArray * next) {
+    _logSyntacticAnalyzerAction(__FUNCTION__);
+    JSONValueArray * array = calloc(1, sizeof(JSONValueArray));
+    array->value = value;
+    array->next = next;
+    return array;
+}

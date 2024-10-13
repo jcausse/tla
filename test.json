@@ -1,1 +1,6 @@
-{"key1":"val1","key2":{"key":{"another key": null},"abc":true,"def":{"ghi":123,"xyz":{"buendia":false}}}}
+{
+   "name": "John Doe",
+   "age": 30,
+   "email": "john",
+   "hobbies": [123, "cycling", "hiking"]
+}

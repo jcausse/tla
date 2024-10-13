@@ -41,6 +41,7 @@ struct JSONBase{
 };
 
 typedef enum JSONValueType JSONValueType;
+typedef struct JSONValueArray JSONValueArray;
 
 enum JSONValueType{
 	JSON_NULL, 
@@ -51,12 +52,17 @@ enum JSONValueType{
 	JSON_OBJECT
 };
 
+struct JSONValueArray {
+    JSONValue * value;
+    JSONValueArray * next;
+};
+
 struct JSONValue {
     JSONValueType type;
     union {
         int number;
         char * string;
-        struct JSONValue * array; // For simplicity, pointer to the first element
+        JSONValueArray  * array; // For simplicity, pointer to the first element
         struct JSONValue * object; // Pointer to the first key-value pair
     } value;
 };

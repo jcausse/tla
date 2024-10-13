@@ -25,6 +25,9 @@
 %x JSON_OBJ_VAL
 %x JSON_OBJ_VAL_STRING
 %x JSON_COMMA_OR_OBJ_END
+%x JSON_ARRAY
+%x JSON_ARRAY_VALUE_STRING
+%x JSON_ARRAY_AFTER_VALUE
 
 /**
  * Reusable patterns.
@@ -135,6 +138,68 @@
     BEGIN(JSON_OBJ_VAL_STRING);
     return BeginStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
 }
+<JSON_OBJ_VAL>"[" {
+    BEGIN(JSON_ARRAY);
+    return BracketOpenLexemeAction(createLexicalAnalyzerContext(), BRACKET_OPEN);
+}
+
+
+<JSON_ARRAY>"\"" {
+    BEGIN(JSON_ARRAY_VALUE_STRING);
+    return BeginStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
+}
+<JSON_ARRAY_VALUE_STRING>([^"])+ {
+    return StringLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_ARRAY_VALUE_STRING>"\"" {
+    BEGIN(JSON_ARRAY_AFTER_VALUE);
+    return EndStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
+}
+
+<JSON_ARRAY>[[:digit:]]+ {
+    BEGIN(JSON_ARRAY_AFTER_VALUE);
+    return IntegerLexemeAction(createLexicalAnalyzerContext());
+}
+
+<JSON_ARRAY>"true" {
+    BEGIN(JSON_ARRAY_AFTER_VALUE);
+    return JSONBoolLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_ARRAY>"false" {
+    BEGIN(JSON_ARRAY_AFTER_VALUE);
+    return JSONBoolLexemeAction(createLexicalAnalyzerContext());
+}
+
+<JSON_ARRAY>"null" {
+    BEGIN(JSON_ARRAY_AFTER_VALUE);
+    return JSONNullLexemeAction(createLexicalAnalyzerContext());
+}
+
+<JSON_ARRAY>"{" {
+    BEGIN(JSON_OBJ);
+    return BeginJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);
+}
+
+<JSON_ARRAY>"[" {
+    return BracketOpenLexemeAction(createLexicalAnalyzerContext(), BRACKET_OPEN);
+}
+
+<JSON_ARRAY_AFTER_VALUE>"," {
+    BEGIN(JSON_ARRAY);
+    return CommaLexemeAction(createLexicalAnalyzerContext());
+}
+<JSON_ARRAY_AFTER_VALUE>"]" {
+    BEGIN(JSON_COMMA_OR_OBJ_END); // Return to previous context
+    return BracketCloseLexemeAction(createLexicalAnalyzerContext(), BRACKET_CLOSE);
+}
+
+
+
+<JSON_ARRAY>"]" {
+    BEGIN(JSON_COMMA_OR_OBJ_END);
+    return BracketCloseLexemeAction(createLexicalAnalyzerContext(), BRACKET_CLOSE);
+}
+
 <JSON_OBJ_VAL_STRING>([A-Za-z0-9_\-]|[[:space:]])* {
     return StringLexemeAction(createLexicalAnalyzerContext());
 }

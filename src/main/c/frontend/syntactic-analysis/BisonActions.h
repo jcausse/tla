@@ -27,4 +27,7 @@ JSONKeyValuePair * createJSONObjectSemanticAction(char * key, JSONValue * value)
 JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data);
 JSONValue * createJSONIntegerValueSemanticAction(JSONValueType type, int data);
 DateRange * createDateRangeSemanticAction(char * start_date, char * end_date);
+JSONValue * createJSONArraySemanticAction(JSONValueArray * values);
+JSONValueArray * createJSONValueArraySingleSemanticAction(JSONValue * value);
+JSONValueArray * createJSONValueArraySemanticAction(JSONValue * value, JSONValueArray * next);
 #endif
