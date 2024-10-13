@@ -176,7 +176,7 @@
 }
 
 <JSON_ARRAY>"{" {
-    BEGIN(JSON_OBJ);
+    BEGIN(JSON_OBJ_KEY_QUOTES);
     return BeginJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);
 }
 

@@ -152,9 +152,9 @@ member:
  * Production rule: json_array
  * Matches a JSON array (either opening and closing brackets (empty array), or values in between brackets).
  */
-json_array: // TODO: fix type warning
+json_array: 
     BRACKET_OPEN BRACKET_CLOSE 
-    | BRACKET_OPEN json_array_values BRACKET_CLOSE 
+    | BRACKET_OPEN json_array_values BRACKET_CLOSE
 ;
 
 /**
