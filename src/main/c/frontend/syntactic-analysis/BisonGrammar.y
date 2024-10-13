@@ -126,8 +126,9 @@ initializer:
  * Models a JSON file, consisting in curly braces with at least one json_object inside.
  */
 json: 
-    json_kv_pair                                                                { $$ = createJSONSemanticAction($1, NULL); }
-    | json_kv_pair COMMA json                                                   { $$ = createJSONSemanticAction($1, $3); }
+    json_kv_pair COMMA json                                                     { $$ = createJSONSemanticAction($1, $3); }
+    | json_kv_pair                                                              { $$ = createJSONSemanticAction($1, NULL); }
+    | CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE                               { $$ = createJSONSemanticAction($2->kv_pair, NULL); }
 ;
 
 /**
@@ -171,12 +172,12 @@ json_array_values:
  * TODO: add support for true, false, null and floating point numbers
  */
 json_value:
-    DOUBLE_QUOTES STRING DOUBLE_QUOTES              { $$ = createJSONValueSemanticAction        (JSON_STRING,   $2); }
-    | INTEGER                                       { $$ = createJSONIntegerValueSemanticAction (JSON_NUMBER,   $1); }
-    | JSON_BOOL_TOKEN                               { $$ = createJSONIntegerValueSemanticAction (JSON_BOOL,     $1); }
-    | JSON_NULL_TOKEN                               { $$ = createJSONValueSemanticAction        (JSON_NULL,     $1); }
-    | json_array                                    { $$ = createJSONValueSemanticAction        (JSON_ARRAY,    $1); }
-    | json_kv_pair                                  { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $1); }
+    DOUBLE_QUOTES STRING DOUBLE_QUOTES                      { $$ = createJSONValueSemanticAction        (JSON_STRING,   $2); }
+    | INTEGER                                               { $$ = createJSONIntegerValueSemanticAction (JSON_NUMBER,   $1); }
+    | JSON_BOOL_TOKEN                                       { $$ = createJSONIntegerValueSemanticAction (JSON_BOOL,     $1); }
+    | JSON_NULL_TOKEN                                       { $$ = createJSONValueSemanticAction        (JSON_NULL,     $1); }
+    | json_array                                            { $$ = createJSONValueSemanticAction        (JSON_ARRAY,    $1); }
+    | CURLY_BRACKET_OPEN json CURLY_BRACKET_CLOSE           { $$ = createJSONValueSemanticAction        (JSON_OBJECT,   $2); }
 ;
 
 /* EXTRA OPTIONS MANAGEMENT SUCH AS DATE, SORT_BY... */

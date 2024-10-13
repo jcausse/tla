@@ -1,1 +1,1 @@
-{"key1": "val1", "key2": 123, "key3": true, "key4": false, "key5": null}
+{"key1":"val1","key2":{"key":{"another key": null},"abc":true,"def":{"ghi":123,"xyz":{"buendia":false}}}}

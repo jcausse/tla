@@ -55,11 +55,11 @@ Token ColonLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerCon
 Token EndJSONObjectLexemeAction     (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
 
 /*** JSON Comma ***/
-Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token);
+Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 /*** JSON Types ***/
-Token JSONBoolLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
-Token JSONNullLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token JSONBoolLexemeAction          (LexicalAnalyzerContext * lexicalAnalyzerContext);
+Token JSONNullLexemeAction          (LexicalAnalyzerContext * lexicalAnalyzerContext);
 
 /************************************* Miscellaneous Lexeme Actions *************************************/
 

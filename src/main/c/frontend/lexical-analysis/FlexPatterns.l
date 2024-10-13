@@ -106,6 +106,13 @@
     BEGIN(JSON_OBJ_KEY_QUOTES); 
     return BeginJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);
 }
+<JSON_OBJ>"}" {
+    return EndJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_CLOSE);
+}
+<JSON_OBJ>"," {
+    BEGIN(JSON_OBJ_KEY_QUOTES); 
+    return CommaLexemeAction(createLexicalAnalyzerContext());
+}
 
 <JSON_OBJ_KEY_QUOTES>"\"" {
     BEGIN(JSON_OBJ_KEY_STRING); 
@@ -151,10 +158,15 @@
     BEGIN(JSON_COMMA_OR_OBJ_END);
     return JSONNullLexemeAction(createLexicalAnalyzerContext());
 }
+<JSON_OBJ_VAL>"{" {
+    BEGIN(JSON_OBJ_KEY_QUOTES); 
+    return BeginJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);
+}
+
 
 <JSON_COMMA_OR_OBJ_END>"," {
     BEGIN(JSON_OBJ_KEY_QUOTES);
-    return CommaLexemeAction(createLexicalAnalyzerContext(), COMMA);
+    return CommaLexemeAction(createLexicalAnalyzerContext());
 }
 <JSON_COMMA_OR_OBJ_END>"}" {
     BEGIN(JSON_OBJ);

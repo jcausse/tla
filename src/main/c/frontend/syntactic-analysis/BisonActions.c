@@ -68,6 +68,7 @@ Initializer * createInitializerSemanticAction(int tournamentAmount, char * tourn
 }
 
 JSONBase * createJSONSemanticAction(JSONKeyValuePair * kv_pair, JSONBase * next_json_base){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	JSONBase * newJson = calloc(1, sizeof(JSONBase));
 	newJson->kv_pair = kv_pair;
 	newJson->next_kv_pair = next_json_base;
@@ -75,6 +76,7 @@ JSONBase * createJSONSemanticAction(JSONKeyValuePair * kv_pair, JSONBase * next_
 }
 
 JSONKeyValuePair * createJSONObjectSemanticAction(char * key, JSONValue * value){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	JSONKeyValuePair * new_json_kv_pair = calloc(1, sizeof(JSONKeyValuePair));
 	new_json_kv_pair->key = key;
 	new_json_kv_pair->value = value;
@@ -82,6 +84,7 @@ JSONKeyValuePair * createJSONObjectSemanticAction(char * key, JSONValue * value)
 }
 
 JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	JSONValue * new_json_value = calloc(1, sizeof(JSONValue));
 	new_json_value->type = type;
 	switch (type){
@@ -99,11 +102,12 @@ JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data){
 		case JSON_OBJECT:
 			new_json_value->value.array = (struct JSONValue *) data;
 			break;
-	}	// TODO: otros tipos de dato? true, false y null?
+	}	// TODO: ARRAYS???
 	return new_json_value;
 }
 
 JSONValue * createJSONIntegerValueSemanticAction(JSONValueType type, int data){
+	_logSyntacticAnalyzerAction(__FUNCTION__);
 	return createJSONValueSemanticAction(type, &data);
 }
 
@@ -114,10 +118,3 @@ DateRange * createDateRangeSemanticAction(char * start_date, char * end_date) {
     date_range->end_date = strdup(end_date);
     return date_range;
 }
-
-
-
-
-
-
-

@@ -124,9 +124,9 @@ Token EndJSONObjectLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext,
 }
 
 /*** JSON Comma ***/
-Token CommaLexemeAction             (LexicalAnalyzerContext * lexicalAnalyzerContext, Token token){
+Token CommaLexemeAction(LexicalAnalyzerContext * lexicalAnalyzerContext){
 	_logLexicalAnalyzerContext(__FUNCTION__, lexicalAnalyzerContext);
-	lexicalAnalyzerContext->semanticValue->token = token;
+	lexicalAnalyzerContext->semanticValue->token = COMMA;
 	return COMMA;
 }
 
