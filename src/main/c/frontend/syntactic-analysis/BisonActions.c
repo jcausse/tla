@@ -100,7 +100,7 @@ JSONValue * createJSONValueSemanticAction(JSONValueType type, void * data){
 			break;
 		case JSON_ARRAY:
 		case JSON_OBJECT:
-			new_json_value->value.array = (struct JSONValue *) data;
+			new_json_value->value.array = (struct JSONValueArray *) data;
 			break;
 	}	// TODO: ARRAYS???
 	return new_json_value;

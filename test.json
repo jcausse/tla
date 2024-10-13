@@ -2,5 +2,9 @@
    "name": "John Doe",
    "age": 30,
    "email": "john",
-   "hobbies": [123, "cycling", "hiking"]
+   "hobbies": [123123, "cycling", "hiking"],
+   "addresses": [
+      { "street": "123 Main St", "city": "Anytown" },
+      { "street": "456 Elm St", "city": "Othertown" }
+   ]
 }

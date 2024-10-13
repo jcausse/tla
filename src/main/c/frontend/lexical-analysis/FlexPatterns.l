@@ -117,10 +117,19 @@
     return CommaLexemeAction(createLexicalAnalyzerContext());
 }
 
+<JSON_OBJ>"]" {
+    return BracketCloseLexemeAction(createLexicalAnalyzerContext(), BRACKET_CLOSE);
+}
 <JSON_OBJ_KEY_QUOTES>"\"" {
     BEGIN(JSON_OBJ_KEY_STRING); 
     return BeginStringLexemeAction(createLexicalAnalyzerContext(), DOUBLE_QUOTES);
 }
+
+
+<JSON_OBJ_KEY_QUOTES>"{" {
+    return BeginJSONObjectLexemeAction(createLexicalAnalyzerContext(), CURLY_BRACKET_OPEN);
+}
+
 <JSON_OBJ_KEY_STRING>([A-Za-z0-9_\-]|[[:space:]])* {
     return StringLexemeAction(createLexicalAnalyzerContext());
 }
